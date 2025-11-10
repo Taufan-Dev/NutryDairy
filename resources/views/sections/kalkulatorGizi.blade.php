@@ -2,8 +2,8 @@
     style="background-image: url('https://images.unsplash.com/photo-1502781252888-9143ba7f074e?auto=format&fit=crop&q=80&w=1600');">
     <div class="absolute inset-0 bg-black/70"></div>
     <div class="relative z-10">
-        <h1 class="font-sekunder text-4xl my-5">NutriDairy</h1>
-        <p>
+        <h1 class="font-sekunder text-4xl my-5 text-gray-200">NutriDairy</h1>
+        <p class="text-gray-200">
             membantu orang tua memantau status gizi balita dengan mudah,
             <br class="hidden md:inline" />
             melalui pengukuran sederhana dan hasil yang cepat,

@@ -1,6 +1,6 @@
 <section class="container mx-auto grid xl:grid-cols-4 gap-10 pt-26 xl:px-16 md:px-5 px-3">
     <!-- Artikel Utama -->
-    <div class="xl:col-span-3 h-[280px] md:h-[350px] xl:h-[450px] relative z-10 flex items-end rounded-xl overflow-hidden bg-cover bg-center after:content-[''] after:absolute after:inset-0 after:bg-black/40 after:-z-10 p-4 md:p-10"
+    <div class="xl:col-span-3 h-[280px] md:h-[350px] xl:h-[450px] relative flex items-end rounded-xl overflow-hidden bg-cover bg-center after:content-[''] after:absolute after:inset-0 after:bg-black/40 after:-z-10 p-4 md:p-10"
         style="background-image: url('https://i.pinimg.com/736x/14/ad/31/14ad3171038b99261210a9fbe6785d41.jpg');">
 
         <div class="w-full max-w-3xl">

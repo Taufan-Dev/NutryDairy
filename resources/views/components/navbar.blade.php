@@ -8,15 +8,18 @@
                 <div class="hidden md:flex space-x-6">
                     <a href="/" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                         Home
-                        <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                     <a href="/artikel" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                         Artikel
-                        <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a href="#" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+                    <a href="/kalkulatorGizi" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                         Kalkulator Gizi
-                        <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                 </div>
             </div>
@@ -25,17 +28,35 @@
             <div class="hidden md:flex space-x-6 items-center">
                 <a href="#" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                     Profile
-                    <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                    <span
+                        class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                 </a>
-                <button class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-lg transition duration-300">
-                    Logout
-                </button>
+                @auth
+                    <!-- Jika sudah login -->
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit"
+                            class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-lg transition duration-300">
+                            Logout
+                        </button>
+                    </form>
+                @endauth
+
+                @guest
+                    <!-- Jika belum login -->
+                    <a href="{{ route('login') }}">
+                        <button class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-lg transition duration-300">
+                            Login
+                        </button>
+                    </a>
+                @endguest
             </div>
 
             <!-- Tombol Hamburger -->
             <div class="md:hidden flex items-center">
                 <button id="menu-btn" class="text-gray-700 focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -49,19 +70,23 @@
         <div class="px-4 py-3 space-y-3">
             <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Home
-                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                <span
+                    class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
             <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Artikel
-                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                <span
+                    class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
             <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Kalkulator Gizi
-                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                <span
+                    class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
             <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Profile
-                <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                <span
+                    class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
             <button class="w-full bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition duration-300">
                 Logout
