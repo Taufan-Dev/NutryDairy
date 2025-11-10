@@ -1,4 +1,4 @@
-<section class="max-w-6xl mx-auto px-6 py-16">
+<section class="max-w-7xl mx-auto px-6 py-16">
     <h2 class="text-5xl font-bold  mb-6 bg-gradient-to-r from-sky-500 to-purple-600 bg-clip-text text-transparent">
         Artikel Terbaru
     </h2>

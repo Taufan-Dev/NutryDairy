@@ -6,11 +6,11 @@
             <div class="flex items-center space-x-8">
                 <a href="#" class="text-xl font-bold text-sky-600">NutryDairy</a>
                 <div class="hidden md:flex space-x-6">
-                    <a href="#" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+                    <a href="/" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                         Home
                         <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a href="#" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+                    <a href="/artikel" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                         Artikel
                         <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                     </a>
