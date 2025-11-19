@@ -17,7 +17,6 @@ return new class extends Migration
             $table->date('measured_at');
             $table->float('weight_kg')->nullable();
             $table->float('height_cm')->nullable();
-            $table->float('muac_cm')->nullable();
             $table->timestamps();
         });
     }
