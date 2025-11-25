@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('parent_id')->constrained('users')->onDelete('cascade');
             $table->string('name', 50);
             $table->date('birth_date');
-            $table->enum('gender', ['M', 'F']);
+            $table->enum('gender', ['laki-laki', 'perempuan']);
             $table->timestamps();
         });
     }

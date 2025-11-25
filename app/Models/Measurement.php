@@ -12,7 +12,9 @@ class Measurement extends Model
         'measured_at',
         'weight_kg',
         'height_cm',
-        'muac_cm',
+        'zscore_bb_u',
+        'zscore_tb_u',
+        'zscore_bb_tb',
     ];
 
     protected $dates = [
@@ -22,10 +24,5 @@ class Measurement extends Model
     public function child()
     {
         return $this->belongsTo(Children::class, 'child_id');
-    }
-
-    public function nutritionStatus()
-    {
-        return $this->hasOne(NutritionStatus::class, 'measurement_id');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Children extends Model
@@ -27,5 +28,11 @@ class Children extends Model
     public function feedingHabits()
     {
         return $this->hasMany(FeedingHabit::class, 'child_id');
+    }
+
+    public function getAgeInDays($date = null)
+    {
+        $date = $date ? Carbon::parse($date) : Carbon::now();
+        return $this->birth_date->diffInDays($date);
     }
 }

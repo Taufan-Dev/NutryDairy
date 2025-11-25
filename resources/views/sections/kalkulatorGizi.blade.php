@@ -66,8 +66,8 @@
                 <select
                     class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" name="gender">
                     <option value="" disabled selected>Pilih jenis kelamin</option>
-                    <option value="M">Laki-laki</option>
-                    <option value="F">Perempuan</option>
+                    <option value="laki-laki">Laki-laki</option>
+                    <option value="perempuan">Perempuan</option>
                 </select>
 
                 <label class="block text-sm font-medium text-gray-700 mt-4">Berat Badan (kg)</label>
