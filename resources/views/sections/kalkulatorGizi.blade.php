@@ -45,26 +45,30 @@
     </h2>
 
     <section class="flex items-center justify-center py-10">
-        <form class="p-6 rounded-lg border-primary border-2 w-full max-w-4xl flex flex-col md:flex-row gap-6" method="POST" action="{{ route('measurements.store') }}">
+        <form class="p-6 rounded-lg border-primary border-2 w-full max-w-4xl flex flex-col md:flex-row gap-6"
+            method="POST" action="{{ route('measurements.store') }}">
             @csrf
 
             <div class="w-full">
                 <label class="block text-sm font-medium text-gray-700">Nama Anak</label>
                 <input type="text"
                     class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    placeholder="Nama Anak" name="name"/>
+                    placeholder="Nama Anak" name="name" />
 
                 <label class="block text-sm font-medium text-gray-700 mt-4">Tanggal Lahir</label>
                 <input type="date"
-                    class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" name="birth_date"/>
+                    class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                    name="birth_date" />
 
                 <label class="block text-sm font-medium text-gray-700 mt-4">Tanggal Ukur</label>
                 <input type="date"
-                    class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" name="measured_at"/>
+                    class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                    name="measured_at" />
 
                 <label class="block text-sm font-medium text-gray-700 mt-4">Jenis Kelamin</label>
                 <select
-                    class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" name="gender">
+                    class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                    name="gender">
                     <option value="" disabled selected>Pilih jenis kelamin</option>
                     <option value="laki-laki">Laki-laki</option>
                     <option value="perempuan">Perempuan</option>
@@ -73,12 +77,12 @@
                 <label class="block text-sm font-medium text-gray-700 mt-4">Berat Badan (kg)</label>
                 <input type="number"
                     class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    placeholder="Masukkan berat badan" name="weight_kg"/>
+                    placeholder="Masukkan berat badan" name="weight_kg" />
 
                 <label class="block text-sm font-medium text-gray-700 mt-4">Tinggi Badan (cm)</label>
                 <input type="number"
                     class="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    placeholder="Masukkan tinggi badan" name="height_cm"/>
+                    placeholder="Masukkan tinggi badan" name="height_cm" />
 
                 <button type="submit"
                     class="mt-6 w-full bg-white border-primary border-2 text-primary py-2 rounded-lg hover:bg-primary hover:text-white">
@@ -87,4 +91,153 @@
             </div>
         </form>
     </section>
+    @if (session('result'))
+        <section class="flex items-center justify-center py-10">
+            <div id="result-card"
+                class="bg-green-50 border border-green-300 text-gray-800 rounded-2xl shadow-lg p-6 w-full max-w-[900px]">
+
+                <h2 class="text-xl font-bold text-green-800 mb-4">Hasil Pemeriksaan</h2>
+
+                <p><strong>Nama:</strong> {{ session('result')['name'] }}</p>
+                <p><strong>Jenis Kelamin:</strong> {{ session('result')['gender'] }}</p>
+                <p><strong>Usia:</strong>
+                    <strong>{{ session('result')['age_years'] }} Tahun</strong>,
+                    <strong>{{ session('result')['age_months'] }} Bulan</strong>,
+                    <strong>{{ session('result')['age_days'] }} Hari</strong>
+                    (<strong>{{ session('result')['age_days_total'] }} Hari</strong>)
+                </p>
+                <p><strong>Tinggi Badan:</strong> {{ session('result')['height'] }} cm</p>
+                <p><strong>Berat Badan:</strong> {{ session('result')['weight_gram'] }} gram atau
+                    {{ session('result')['weight'] }} kg</p>
+
+                <h3 class="mt-4 text-lg font-bold text-green-800">Hasil Status Gizi</h3>
+
+                {{-- TABLE --}}
+                <div class="overflow-x-auto mt-4">
+                    <table class="table-auto w-full border-collapse text-sm border border-gray-400">
+                        <thead>
+                            <tr class="bg-green-300 text-gray-900">
+                                <th class="border border-gray-400 px-3 py-2">Indeks</th>
+                                <th class="border border-gray-400 px-3 py-2">Z-Score</th>
+                                <th class="border border-gray-400 px-3 py-2">Status Gizi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- BB/U --}}
+                            <tr>
+                                <td class="border px-3 py-2 font-semibold text-center" rowspan="5">BB/U</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['zscore_bbu'] }}</td>
+                                <td class="border px-3 py-2 text-center font-bold"
+                                    style="background:{{ session('result')['color_bbu'] }};">
+                                    {{ session('result')['status_bbu'] }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2" colspan="2">Keterangan:</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="border px-3 py-2 text-center">L</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['L_bbu'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">M</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['M_bbu'] }}</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="border px-3 py-2 text-center">S</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['S_bbu'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 font-semibold text-center" rowspan="6">TB/U</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['zscore_tbu'] }}</td>
+                                <td class="border px-3 py-2 text-center font-bold"
+                                    style="background:{{ session('result')['color_tbu'] }};">
+                                    {{ session('result')['status_tbu'] }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2" colspan="2">Keterangan:</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">-1SD</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['SD1neg'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">SD0</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['SD0'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">+1SD</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['SD1'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">Simpangan Baku</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['simpanganBaku'] }}</td>
+                            </tr>
+
+                            {{-- BB/TB --}}
+                            <tr>
+                                <td class="border px-3 py-2 font-semibold text-center" rowspan="5">BB/TB</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['zscore_bbtb'] }}</td>
+                                <td class="border px-3 py-2 text-center font-bold"
+                                    style="background:{{ session('result')['color_bbtb'] }};">
+                                    {{ session('result')['status_bbtb'] }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2" colspan="2">Keterangan:</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">L</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['L_bbtb'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">M</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['M_bbtb'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-3 py-2 text-center">S</td>
+                                <td class="border px-3 py-2 text-center">{{ session('result')['S_bbtb'] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-4 text-xs text-gray-600">
+                    *Penentuan Zscore berdasarkan WHO Growth Standards. Penentuan Status Gizi sesuai Permenkes No 2
+                    Tahun 2020.
+                </p>
+
+            </div>
+        </section>
+    @endif
 </main>
+@if (session('result'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const el = document.getElementById("result-card");
+            if (el) {
+                setTimeout(() => {
+                    el.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+            }
+        });
+    </script>
+@endif

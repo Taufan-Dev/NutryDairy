@@ -18,11 +18,11 @@ return new class extends Migration
             $table->float('weight_kg')->nullable();
             $table->float('height_cm')->nullable();
             $table->float('zscore_bb_u')->nullable();
-            $table->string('bb_u_status', 10)->nullable();
+            $table->string('bb_u_status')->nullable();
             $table->float('zscore_tb_u')->nullable();
-            $table->string('tb_u_status', 10)->nullable();
+            $table->string('tb_u_status')->nullable();
             $table->float('zscore_bb_tb')->nullable();
-            $table->string('bb_tb_status', 10)->nullable();
+            $table->string('bb_tb_status')->nullable();
             $table->timestamps();
         });
     }

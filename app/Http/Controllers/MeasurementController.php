@@ -42,48 +42,45 @@ class MeasurementController extends Controller
         $tanggalUkur = Carbon::parse($request->input('measured_at'));
 
         $ageInDays = $tanggalLahir->diffInDays($tanggalUkur);
+        $ageMonths = floor($ageInDays / 30.4375);
+        $ageYears = floor($ageMonths / 12);
 
-        $standard = WhoStandard::getStandard($ageInDays, $request->gender);
+        $remMonths = $ageMonths % 12;
+        $remDays = $ageInDays - ($ageYears * 365) - round($remMonths * 30.4375);
 
-        $zScoreTbU = $standard->calculateZScoreTbU($request->height_cm);
-        $zScoreBbU = $standard->calculateZScoreBbU($request->weight_kg);
-        $zScoreBbTb = $standard->calculateZScoreBbTb($request->weight_kg);
-
-        if ($zScoreTbU < -3) {
-            $statusTbU = 'Sangat Pendek';
-        } elseif ($zScoreTbU >= -3 && $zScoreTbU < -2) {
-            $statusTbU = 'Pendek';
-        } elseif ($zScoreTbU >= -2 && $zScoreTbU <= 2) {
-            $statusTbU = 'Normal';
+        if ($ageMonths < 24) {
+            $bbtbIndicator = 'length'; // BB/PB
         } else {
-            $statusTbU = 'Tinggi';
+            $bbtbIndicator = 'height'; // BB/TB
         }
 
-        if ($zScoreBbU < -3) {
-            $statusBbU = 'Sangat Kurus';
-        } elseif ($zScoreBbU >= -3 && $zScoreBbU < -2) {
-            $statusBbU = 'Kurus';
-        } elseif ($zScoreBbU >= -2 && $zScoreBbU <= 1) {
-            $statusBbU = 'Normal';
-        } elseif ($zScoreBbU > 1 && $zScoreBbU <= 2) {
-            $statusBbU = 'Gemuk';
-        } else {
-            $statusBbU = 'Sangat Gemuk';
-        }
+        $standardTbU = WhoStandard::getStandard($ageInDays, $request->gender, 'height');
+        $standardBbU = WhoStandard::getStandard($ageInDays, $request->gender, 'weight');
+        $standardBbTb = WhoStandard::getBbTbStandard($request->height_cm, $request->gender, $bbtbIndicator);
 
-        if ($zScoreBbTb < -3) {
-            $statusBbTb = 'Gizi Buruk';
-        } elseif ($zScoreBbTb >= -3 && $zScoreBbTb < -2) {
-            $statusBbTb = 'Gizi Kurang';
-        } elseif ($zScoreBbTb >= -2 && $zScoreBbTb <= 1) {
-            $statusBbTb = 'Gizi Baik (Normal)';
-        } elseif ($zScoreBbTb > 1 && $zScoreBbTb <= 2) {
-            $statusBbTb = 'Berisiko Gizi Lebih';
-        } elseif ($zScoreBbTb > 2 && $zScoreBbTb <= 3) {
-            $statusBbTb = 'Gizi Lebih';
-        } else {
-            $statusBbTb = 'Obesitas';
-        }
+        $zScoreTbU = $standardTbU->calculateZScoreTbU($request->height_cm);
+        $zScoreBbU = $standardBbU->calculateZScoreBbU($request->weight_kg);
+        $zScoreBbTb = $standardBbTb->calculateZScoreBbTb($request->weight_kg);
+
+        // === KLASIFIKASI TB/U ===
+        if ($zScoreTbU < -3)         $statusTbU = 'Sangat Pendek';
+        elseif ($zScoreTbU < -2)     $statusTbU = 'Pendek';
+        elseif ($zScoreTbU <= 3)     $statusTbU = 'Normal';
+        else                         $statusTbU = 'Tinggi';
+
+        // === KLASIFIKASI BB/U ===
+        if ($zScoreBbU < -3)         $statusBbU = 'Berat Badan Sangat Kurang';
+        elseif ($zScoreBbU < -2)     $statusBbU = 'Berat Badan Kurang';
+        elseif ($zScoreBbU <= 1)     $statusBbU = 'Berat Badan Normal';
+        else                         $statusBbU = 'Risiko Berat Badan Lebih';
+
+        // === KLASIFIKASI BB/TB ===
+        if ($zScoreBbTb < -3)        $statusBbTb = 'Gizi Buruk';
+        elseif ($zScoreBbTb < -2)    $statusBbTb = 'Gizi Kurang';
+        elseif ($zScoreBbTb <= 1)    $statusBbTb = 'Gizi Baik (Normal)';
+        elseif ($zScoreBbTb <= 2)    $statusBbTb = 'Berisiko Gizi Lebih';
+        elseif ($zScoreBbTb <= 3)    $statusBbTb = 'Gizi Lebih';
+        else                         $statusBbTb = 'Obesitas';
 
         $measurement = new Measurement();
         $measurement->child_id = $child->id;
@@ -98,12 +95,55 @@ class MeasurementController extends Controller
         $measurement->bb_tb_status = $statusBbTb;
         $measurement->save();
 
-        return back()->with('success', 'Pengukuran berhasil disimpan.');
-    }
+        function color($status)
+        {
+            return match ($status) {
+                'Sangat Pendek', 'Berat Badan Sangat Kurang', 'Gizi Buruk', 'Obesitas', 'Obesitas', 'Berisiko Gizi Lebih', 'Gizi Lebih', 'Risiko Berat Badan Lebih', 'Tinggi'
+                => '#dc2626', // merah tua
+                'Pendek', 'Berat Badan Kurang', 'Gizi Kurang', 'Risiko Gizi Lebih'
+                => '#f59e0b', // kuning
+                'Normal', 'Gizi Baik (Normal)', 'Berat Badan Normal'
+                => '#22c55e', // hijau
+                default => '#6b7280'
+            };
+        }
 
-    public function destroy(Measurement $measurement)
-    {
-        $measurement->delete();
-        return back()->with('success', 'Pengukuran berhasil dihapus.');
+        return back()->with('result', [
+            'name'      => $child->name,
+            'gender'    => $child->gender,
+            'age_years' => $ageYears,
+            'age_months' => $remMonths,
+            'age_days'  => $remDays,
+            'age_days_total' => $ageInDays,
+
+            'weight' => $request->weight_kg,
+            'weight_gram' => $request->weight_kg * 1000,
+            'height' => $request->height_cm,
+
+            'zscore_bbu'  => number_format($zScoreBbU, 2),
+            'zscore_tbu'  => number_format($zScoreTbU, 2),
+            'zscore_bbtb' => number_format($zScoreBbTb, 2),
+
+            'status_bbu'  => $statusBbU,
+            'status_tbu'  => $statusTbU,
+            'status_bbtb' => $statusBbTb,
+
+            'color_bbu'  => color($statusBbU),
+            'color_tbu'  => color($statusTbU),
+            'color_bbtb' => color($statusBbTb),
+
+            'L_bbu' => $standardBbU->L,
+            'M_bbu' => $standardBbU->M,
+            'S_bbu' => $standardBbU->S,
+
+            'SD1neg' => $standardTbU->SD1neg,
+            'SD0' => $standardTbU->SD0,
+            'SD1' => $standardTbU->SD1,
+            'simpanganBaku' => ($standardTbU->SD1 - $standardTbU->SD1neg) / 2,
+
+            'L_bbtb' => $standardBbTb->L,
+            'M_bbtb' => $standardBbTb->M,
+            'S_bbtb' => $standardBbTb->S,
+        ]);
     }
 }

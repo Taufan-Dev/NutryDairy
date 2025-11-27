@@ -36,7 +36,7 @@
             <!-- Artikel 1 -->
             <div class="md:grid md:grid-cols-5 items-center xl:gap-10 md:gap-5 md:mb-5 mb-16">
                 <div class="md:col-span-2">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+                    <img src="https://rsudkertosono.nganjukkab.go.id/web2/assets/images/2f27d1d5b8f3b564af48ff25bce30cd6.jpg"
                         class="w-full h-[250px] rounded-xl object-cover" />
                 </div>
                 <div class="md:col-span-3 md:mt-0 mt-3">

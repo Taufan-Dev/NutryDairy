@@ -15,20 +15,21 @@ return new class extends Migration
             $table->id();
             $table->enum('gender', ['laki-laki', 'perempuan'])->nullable();
             $table->integer('age_value')->nullable();
-            $table->decimal('L'); // Lambda
-            $table->decimal('M'); // Median
-            $table->decimal('S'); // Coefficient of variation
-            $table->decimal('SD4neg')->nullable();
-            $table->decimal('SD3neg')->nullable();
-            $table->decimal('SD2neg')->nullable();
-            $table->decimal('SD1neg')->nullable();
-            $table->decimal('SD0')->nullable();
-            $table->decimal('SD1')->nullable();
-            $table->decimal('SD2')->nullable();
-            $table->decimal('SD3')->nullable();
-            $table->decimal('SD4')->nullable();
+            $table->decimal('length_height_value')->nullable();
+            $table->string('indicator')->nullable();
+            $table->decimal('L', 10, 5); // Lambda
+            $table->decimal('M', 10, 5); // Median
+            $table->decimal('S', 10, 5); // Coefficient of variation
+            $table->decimal('SD4neg', 10, 5)->nullable();
+            $table->decimal('SD3neg', 10, 5)->nullable();
+            $table->decimal('SD2neg', 10, 5)->nullable();
+            $table->decimal('SD1neg', 10, 5)->nullable();
+            $table->decimal('SD0', 10, 5)->nullable();
+            $table->decimal('SD1', 10, 5)->nullable();
+            $table->decimal('SD2', 10, 5)->nullable();
+            $table->decimal('SD3', 10, 5)->nullable();
+            $table->decimal('SD4', 10, 5)->nullable();
             $table->timestamps();
-
         });
     }
 
