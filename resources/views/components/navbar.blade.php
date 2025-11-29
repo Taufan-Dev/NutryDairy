@@ -16,7 +16,8 @@
                         <span
                             class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a href="/kalkulatorGizi" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+                    <a href="/kalkulatorGizi"
+                        class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                         Kalkulator Gizi
                         <span
                             class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
@@ -50,6 +51,14 @@
                         </button>
                     </a>
                 @endguest
+
+                @auth
+                    @if (auth()->user()->role === 'admin')
+                        <a href="{{ route('dashboard') }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded-lg transition duration-300">
+                            Dashboard
+                        </a>
+                    @endif
+                @endauth
             </div>
 
             <!-- Tombol Hamburger -->
