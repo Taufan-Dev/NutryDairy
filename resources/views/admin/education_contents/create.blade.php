@@ -5,6 +5,10 @@
 @section('content')
     <div class="p-6 max-w-3xl mx-auto">
         <h1 class="text-2xl font-bold mb-4">Tambah Konten Edukasi</h1>
+        
+        @error('thumbnail')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <form action="{{ route('education_contents.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
@@ -61,7 +65,7 @@
             <!-- Video URL (muncul ketika media_type = video) -->
             <div id="videoField" style="display:none;">
                 <label class="font-semibold">Video URL</label>
-                <input type="text" name="video_url" class="w-full border rounded p-2"
+                <input type="text" name="media_url" class="w-full border rounded p-2"
                     placeholder="https://youtube.com/... atau link MP4">
             </div>
 

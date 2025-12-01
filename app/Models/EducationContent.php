@@ -16,6 +16,7 @@ class EducationContent extends Model
         'category',
         'content',
         'media_url',
+        'thumbnail',
         'published_at',
     ];
 

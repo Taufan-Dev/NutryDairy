@@ -77,7 +77,6 @@ class ArticleController extends Controller
                 $score++;
             }
         }
-        // dd($request->all());
 
         QuizResult::updateOrCreate(
             [

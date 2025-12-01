@@ -27,7 +27,7 @@ class EducationContentController extends Controller
             'media_type' => 'required|string|max:100',
             'category' => 'required|string|max:100',
             'content' => 'nullable|string',
-            'thumbnail'   => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'thumbnail'   => 'nullable|image|mimes:jpg,png,jpeg|max:8192',
             'media_url' => 'nullable|string',
             'published_at' => 'nullable|date',
         ]);
@@ -37,7 +37,14 @@ class EducationContentController extends Controller
             : 'keterampilan';
 
         $thumbnailPath = null;
+
         if ($request->hasFile('thumbnail')) {
+            if (!$request->file('thumbnail')->isValid()) {
+                return back()->withErrors([
+                    'thumbnail' => 'File terlalu besar. Maksimum 8MB.',
+                ])->withInput();
+            }
+
             $thumbnailPath = $request->file('thumbnail')->store('education_contents', 'public');
         }
 
@@ -66,8 +73,8 @@ class EducationContentController extends Controller
             'title' => 'required|string|max:255',
             'media_type' => 'required|string|max:100',
             'category' => 'required|string|max:100',
-            'content' => 'null|string',
-            'thumbnail'   => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'content' => 'nullable|string',
+            'thumbnail'   => 'nullable|image|mimes:jpg,png,jpeg|max:8192',
             'media_url' => 'nullable|string',
             'published_at' => 'nullable|date',
         ]);
@@ -76,11 +83,13 @@ class EducationContentController extends Controller
             ? 'pengetahuan'
             : 'keterampilan';
 
-        $thumbnailPath = $educationContent->thumbnail;
-        if ($request->hasFile('thumbnail')) {
+        $thumbnailPath = null;
 
-            if ($educationContent->thumbnail) {
-                Storage::disk('public')->delete($educationContent->thumbnail);
+        if ($request->hasFile('thumbnail')) {
+            if (!$request->file('thumbnail')->isValid()) {
+                return back()->withErrors([
+                    'thumbnail' => 'File terlalu besar. Maksimum 8MB.',
+                ])->withInput();
             }
 
             $thumbnailPath = $request->file('thumbnail')->store('education_contents', 'public');
