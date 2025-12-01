@@ -1,74 +1,109 @@
-<section class="container mx-auto pt-32 xl:px-20 md:px-5 px-3 grid xl:grid-cols-4 gap-10">
-    <!-- Konten Kiri (Artikel) -->
-    <div class="xl:col-span-3">
-        <h6 class="text-sky-500 font-semibold text-sm md:text-base mb-1 md:mb-3">
-            Teknologi
-        </h6>
-        <h3 class="text-3xl font-bold mb-3">
-            Inovasi Terbaru dalam Dunia Digital 2025
-        </h3>
+<section class="max-w-4xl mx-auto px-6 py-16">
 
-        <p class="font-semibold">
-            Dipublikasikan Oleh:
-            <span class="text-sky-500 font-semibold">Taufan Hidayatul Akbar</span>
-        </p>
+    <h1 class="text-3xl font-bold mb-6">{{ $content->title }}</h1>
 
-        <div class="mt-5 flex gap-10 font-medium text-sm text-gray-500">
-            <p class="flex gap-2 pb-5 items-center">
-                <i class="fa-regular fa-calendar"></i>
-                <span>10 Juni 2025</span>
-            </p>
+    <!-- === PRETEST === -->
+    @if ($content->type === 'pengetahuan' && is_null($pretestResult?->score))
+        <div x-data="{ openPretest: true }">
+
+            <!-- Modal -->
+            <div x-show="openPretest" class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center"
+                x-transition>
+
+                <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6" x-transition.scale>
+
+                    <h2 class="text-xl font-semibold mb-4">Pretest</h2>
+
+                    <form action="{{ route('article.pretest.submit', $content->id) }}" method="POST">
+                        @csrf
+
+                        @foreach ($pretestQuestions as $q)
+                            <div class="mb-4">
+                                <p class="font-medium text-gray-800">{{ $q->question }}</p>
+
+                                @foreach ($q->options as $opt)
+                                    <label class="block mt-1">
+                                        <input type="radio" name="answers[{{ $q->id }}]"
+                                            value="{{ $opt }}" required>
+                                        {{ $opt }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        @endforeach
+
+                        <div class="mt-6 flex justify-end">
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Submit Pretest
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
         </div>
+        @php return; @endphp
+    @endif
+    <!-- END PRETEST -->
 
-        <img src="https://images.unsplash.com/photo-1526378722438-4ae9d6d9e89c?auto=format&fit=crop&w=900&q=80"
-            alt="Inovasi Terbaru dalam Dunia Digital 2025"
-            class="w-full h-auto object-cover rounded mb-6">
 
-        <article class="prose max-w-none text-justify">
-            Dunia digital terus berkembang pesat dengan hadirnya teknologi-teknologi baru seperti kecerdasan buatan,
-            blockchain, dan Internet of Things (IoT). Inovasi ini membawa dampak besar terhadap berbagai sektor, mulai
-            dari pendidikan, ekonomi, hingga gaya hidup masyarakat modern.
-        </article>
+    <!-- === KONTEN (ARTIKEL / VIDEO) === -->
+    <div class="bg-white shadow p-6 rounded-xl mb-10">
+        <h2 class="text-xl font-semibold mb-4">Materi</h2>
+
+        @if ($content->media_type === 'video')
+            <video controls class="w-full rounded">
+                <source src="{{ $content->media_url }}" type="video/mp4">
+            </video>
+        @else
+            <div class="prose max-w-none">
+                {!! $content->content !!}
+            </div>
+        @endif
     </div>
 
-    <!-- Konten Kanan (Sidebar Sticky) -->
-    <div class="hidden xl:block sticky top-32 self-start">
-        <div
-            class="xl:h-[250px] h-[230px] after:rounded relative after:content-[''] after:bg-black/20 after:absolute after:inset-0">
-            <img src="https://assets.promediateknologi.id/crop/0x182:2048x1509/750x500/webp/photo/2023/01/10/24757301.jpg"
-                class="w-full xl:h-[250px] h-[230px] rounded-xl object-cover" />
+    <!-- === POSTTEST === -->
+    @if ($content->type === 'pengetahuan' && !is_null($pretestResult?->score) && is_null($posttestResult?->score))
+        <div class="mt-6">
+            <button x-data x-on:click="$dispatch('open-posttest')"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                Lanjut ke Posttest
+            </button>
         </div>
+    @endif
 
-        <div>
-            <!-- Artikel Rekomendasi 1 -->
-            <div class="xl:my-5 my-3">
-                <p class="text-sky-500 font-semibold">Teknologi</p>
-                <a href="#">
-                    <h5 class="font-semibold xl:text-xl text-base text-gray-900">
-                        Masa Depan AI dan Dampaknya pada Dunia Kerja
-                    </h5>
-                </a>
-            </div>
+<div x-data="{ openPosttest: false }" 
+     x-on:open-posttest.window="openPosttest = true">
+    <div x-show="openPosttest"
+         class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center"
+         x-transition>
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6" x-transition.scale>
+            <h2 class="text-xl font-semibold mb-4">Posttest</h2>
 
-            <!-- Artikel Rekomendasi 2 -->
-            <div class="xl:my-5 my-3">
-                <p class="text-sky-500 font-semibold">Inovasi</p>
-                <a href="#">
-                    <h5 class="font-semibold xl:text-xl text-base text-gray-900">
-                        Startup Lokal yang Mendorong Ekonomi Digital
-                    </h5>
-                </a>
-            </div>
+            <form action="{{ route('article.posttest.submit', $content->id) }}" method="POST">
+                @csrf
 
-            <!-- Artikel Rekomendasi 3 -->
-            <div class="xl:my-5 my-3">
-                <p class="text-sky-500 font-semibold">Gaya Hidup</p>
-                <a href="#">
-                    <h5 class="font-semibold xl:text-xl text-base text-gray-900">
-                        Cara Hidup Seimbang di Era Teknologi Canggih
-                    </h5>
-                </a>
-            </div>
+                @foreach ($posttestQuestions as $q)
+                    <div class="mb-4">
+                        <p class="font-medium text-gray-800">{{ $q->question }}</p>
+
+                        @foreach ($q->options as $opt)
+                            <label class="block mt-1">
+                                <input type="radio" name="answers[{{ $q->id }}]"
+                                    value="{{ $opt }}" required>
+                                {{ $opt }}
+                            </label>
+                        @endforeach
+                    </div>
+                @endforeach
+
+                <div class="mt-6 flex justify-end">
+                    <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        Selesai Posttest
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
 </section>
