@@ -4,6 +4,6 @@
 <div>
     @include('sections.hero')
     @include("sections.about")
-    @include('sections.listArtikel')
+    {{-- @include('sections.listArtikel') --}}
 </div>
 @endsection

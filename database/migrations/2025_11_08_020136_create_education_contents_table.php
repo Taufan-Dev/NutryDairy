@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
+            $table->foreignId('category_id')->constrained('education_categories');
             $table->string('type');
-            $table->string('category');
-            $table->longText('content');
+            $table->string('media_type');
+            $table->longText('content')->nullable();
             $table->string('media_url')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->json('nutrition_tags')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });

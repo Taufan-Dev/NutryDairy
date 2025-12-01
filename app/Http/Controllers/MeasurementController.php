@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Children;
+use App\Models\EducationContent;
 use App\Models\Measurement;
 use App\Models\NutritionStatus;
 use App\Models\WhoStandard;
@@ -12,6 +13,31 @@ use Illuminate\Support\Facades\Auth;
 
 class MeasurementController extends Controller
 {
+    private function mapEducationCategory($statusBbU, $statusTbU, $statusBbTb)
+    {
+        // Prioritas utama = BB/TB
+        return match ($statusBbTb) {
+            'Gizi Buruk'  => ['pemulihan-gizi', 'rehabilitasi-gizi'],
+            'Gizi Kurang' => ['peningkatan-gizi', 'mpasi-kalori-tinggi'],
+            'Berisiko Gizi Lebih' => ['pencegahan-obesitas', 'atur-porsi'],
+            'Gizi Lebih'  => ['diet-sehat-anak', 'aktivitas-fisik'],
+            'Obesitas'    => ['obesitas-anak', 'kurangi-gula', 'aktivitas-fisik'],
+
+            default => null
+        } ?? match ($statusBbU) {
+            'Berat Badan Sangat Kurang' => ['pemulihan-gizi', 'mpasi-kalori-tinggi'],
+            'Berat Badan Kurang'        => ['peningkatan-berat-badan', 'mpasi-seimbang'],
+            'Risiko Berat Badan Lebih'  => ['pencegahan-obesitas', 'atur-porsi'],
+
+            default => null
+        } ?? match ($statusTbU) {
+            'Sangat Pendek' => ['stunting-berat', 'mikronutrien', 'tumbuh-kejar'],
+            'Pendek'        => ['pencegahan-stunting', 'menu-pertumbuhan'],
+
+            default => ['pola-makan-seimbang']
+        };
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -108,6 +134,13 @@ class MeasurementController extends Controller
             };
         }
 
+        $categories = $this->mapEducationCategory($statusBbU, $statusTbU, $statusBbTb);
+
+        $recommendations = EducationContent::whereIn('category', $categories)
+            ->limit(6)
+            ->get();
+
+
         return back()->with('result', [
             'name'      => $child->name,
             'gender'    => $child->gender,
@@ -144,6 +177,8 @@ class MeasurementController extends Controller
             'L_bbtb' => $standardBbTb->L,
             'M_bbtb' => $standardBbTb->M,
             'S_bbtb' => $standardBbTb->S,
+
+            'recommendations' => $recommendations,
         ]);
     }
 }

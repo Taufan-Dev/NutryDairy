@@ -136,7 +136,7 @@
                             <tr>
                                 <td class="border px-3 py-2" colspan="2">Keterangan:</td>
                             </tr>
-                            
+
                             <tr>
                                 <td class="border px-3 py-2 text-center">L</td>
                                 <td class="border px-3 py-2 text-center">{{ session('result')['L_bbu'] }}</td>
@@ -146,7 +146,7 @@
                                 <td class="border px-3 py-2 text-center">M</td>
                                 <td class="border px-3 py-2 text-center">{{ session('result')['M_bbu'] }}</td>
                             </tr>
-                            
+
                             <tr>
                                 <td class="border px-3 py-2 text-center">S</td>
                                 <td class="border px-3 py-2 text-center">{{ session('result')['S_bbu'] }}</td>
@@ -225,6 +225,40 @@
             </div>
         </section>
     @endif
+
+    @if (session('result') && session('result')['recommendations']->count())
+        <section class="py-10">
+            <div class="bg-blue-50 border border-blue-300 rounded-2xl shadow-lg p-6 w-full max-w-[900px] mx-auto">
+
+                <h2 class="text-xl font-bold text-blue-800 mb-4">
+                    Rekomendasi Edukasi Untuk Anak Anda
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach (session('result')['recommendations'] as $item)
+                        <a href="{{ route('article.detail', $item->slug) }}"
+                            class="flex items-center gap-4 p-4 rounded-lg bg-white shadow hover:bg-blue-100 transition">
+
+                            <!-- Thumbnail -->
+                            <img src="{{ $item->thumbnail ? asset('storage/' . $item->thumbnail) : '/image/default-thumb.jpg' }}"
+                                class="w-20 h-20 object-cover rounded-lg">
+
+                            <div>
+                                <h3 class="font-semibold text-gray-800">{{ $item->title }}</h3>
+                                <p class="text-xs text-gray-500 capitalize">{{ $item->category }}</p>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+
+                <p class="mt-4 text-xs text-gray-600">
+                    *Rekomendasi berdasarkan status gizi anak Anda.
+                </p>
+
+            </div>
+        </section>
+    @endif
+
 </main>
 @if (session('result'))
     <script>

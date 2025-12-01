@@ -56,8 +56,6 @@
             @yield('content')
         </div>
         
-        @include('admin.layout.footer')
-
         @include('admin.layout.component.scroll-top-btn')
 
     </div>
