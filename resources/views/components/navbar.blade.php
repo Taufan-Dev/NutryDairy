@@ -22,6 +22,12 @@
                         <span
                             class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
                     </a>
+                    <a href="/catatan-ibu"
+                        class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+                        Catatan Ibu Pintar
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
                 </div>
             </div>
 
@@ -34,12 +40,13 @@
                 </a>
                 @auth
                     <!-- Jika sudah login -->
-                    <form action="{{ route('logout') }}" method="POST">
+                    <button onclick="document.getElementById('logoutForm').submit();"
+                        class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-lg transition duration-300">
+                        Logout
+                    </button>
+
+                    <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
                         @csrf
-                        <button type="submit"
-                            class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-lg transition duration-300">
-                            Logout
-                        </button>
                     </form>
                 @endauth
 
@@ -54,7 +61,8 @@
 
                 @auth
                     @if (auth()->user()->role === 'admin')
-                        <a href="{{ route('dashboard') }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded-lg transition duration-300">
+                        <a href="{{ route('dashboard') }}"
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded-lg transition duration-300">
                             Dashboard
                         </a>
                     @endif
