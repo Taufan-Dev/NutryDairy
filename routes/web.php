@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MeasurementController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,9 +14,6 @@ Route::get('/', function () {
     return view('pages.landing');
 });
 
-Route::get('/detailArtikel', function () {
-    return view('pages.detailArtikel');
-});
 Route::get('/kalkulatorGizi', function () {
     return view('pages.gizi');
 });
@@ -33,12 +31,14 @@ Route::post('/artikel/{id}/pretest', [ArticleController::class, 'submitPretest']
 Route::post('/artikel/{id}/posttest', [ArticleController::class, 'submitPosttest'])
     ->name('article.posttest.submit');
 
-
-
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/catatan-ibu', [NoteController::class, 'index'])->name('notes.index');
+    Route::get('/catatan-ibu/tambah', [NoteController::class, 'create'])->name('notes.create');
+    Route::post('/catatan-ibu/tambah', [NoteController::class, 'store'])->name('notes.store');
 
     Route::post('/measurements', [MeasurementController::class, 'store'])->name('measurements.store');
 

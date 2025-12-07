@@ -39,7 +39,7 @@
             <label class="font-semibold">Pilihan Jawaban</label>
 
             <div id="option-wrapper" class="space-y-2">
-                @foreach (json_decode($quiz->options) as $opt)
+                @foreach ($quiz->options as $opt)
                     <input type="text" name="options[]" class="w-full border p-2 rounded" value="{{ $opt }}">
                 @endforeach
             </div>

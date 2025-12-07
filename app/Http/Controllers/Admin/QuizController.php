@@ -32,7 +32,7 @@ class QuizController extends Controller
         ]);
 
         $options = array_map('trim', $request->options);
-$options = array_filter($options);
+        $options = array_filter($options);
 
         Quiz::create([
             'education_content_id' => $request->education_content_id,
@@ -61,11 +61,14 @@ $options = array_filter($options);
             'answer' => 'required|string'
         ]);
 
+        $options = array_map('trim', $request->options);
+        $options = array_filter($options);
+
         $quiz->update([
             'education_content_id' => $request->education_content_id,
             'type' => $request->type,
             'question' => $request->question,
-            'options' => json_encode($request->options),
+            'options' => $options,
             'answer' => $request->answer
         ]);
 
