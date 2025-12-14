@@ -38,6 +38,13 @@ class EducationContentController extends Controller
 
         $thumbnailPath = null;
 
+        if ($request->media_type === 'video' && !$thumbnailPath && $request->media_url) {
+            preg_match('/(?:v=|\/)([0-9A-Za-z_-]{11})/', $request->media_url, $matches);
+            if (isset($matches[1])) {
+                $thumbnailPath = 'https://img.youtube.com/vi/' . $matches[1] . '/hqdefault.jpg';
+            }
+        }
+
         if ($request->hasFile('thumbnail')) {
             if (!$request->file('thumbnail')->isValid()) {
                 return back()->withErrors([
@@ -83,7 +90,7 @@ class EducationContentController extends Controller
             ? 'pengetahuan'
             : 'keterampilan';
 
-        $thumbnailPath = null;
+        $thumbnailPath = $educationContent->thumbnail;
 
         if ($request->hasFile('thumbnail')) {
             if (!$request->file('thumbnail')->isValid()) {
@@ -92,7 +99,12 @@ class EducationContentController extends Controller
                 ])->withInput();
             }
 
-            $thumbnailPath = $request->file('thumbnail')->store('education_contents', 'public');
+            if ($educationContent->thumbnail) {
+                Storage::disk('public')->delete($educationContent->thumbnail);
+            }
+
+            $thumbnailPath = $request->file('thumbnail')
+                ->store('education_contents', 'public');
         }
 
         $educationContent->update([

@@ -55,7 +55,7 @@
         <div id="content" class="app-content {{ $appContentClass }}">
             @yield('content')
         </div>
-        
+
         @include('admin.layout.component.scroll-top-btn')
 
     </div>
