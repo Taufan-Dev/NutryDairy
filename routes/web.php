@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EducationContentController;
 use App\Http\Controllers\Admin\QuizController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MeasurementController;
@@ -49,6 +50,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('education_contents', EducationContentController::class)->names('education_contents');
 
         Route::resource('quizzes', QuizController::class)->names('quizzes');
+
+        Route::resource('admin/users', AdminUserController::class)->names('admin.users');
     });
 });
 

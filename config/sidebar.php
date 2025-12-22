@@ -23,5 +23,11 @@ return [
         'url' => '/quizzes',
         'permission' => 'admin',
         'route_name' => 'quizzes.index',
+    ], [
+        'icon' => 'fa fa-users',
+        'title' => 'Manajemen User',
+        'url' => '/admin/users',
+        'permission' => 'admin',
+        'route_name' => 'admin.users.index',
     ]],
 ];
