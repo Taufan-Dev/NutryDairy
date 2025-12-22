@@ -44,6 +44,17 @@
         Isi Data Berikut Ini
     </h2>
 
+    @if ($errors->any())
+        <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <ul class="list-disc list-inside text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
     <section class="flex items-center justify-center py-10">
         <form class="p-6 rounded-lg border-primary border-2 w-full max-w-4xl flex flex-col md:flex-row gap-6"
             method="POST" action="{{ route('measurements.store') }}">

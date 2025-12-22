@@ -45,8 +45,13 @@ class MeasurementController extends Controller
             'birth_date' => 'required|date',
             'gender' => 'required',
             'measured_at' => 'required|date',
-            'weight_kg' => 'required|numeric',
+            'weight_kg' => 'required|numeric|min:5|max:25',
             'height_cm' => 'required|numeric',
+        ], [
+            'weight_kg.required' => 'Berat badan wajib diisi.',
+            'weight_kg.numeric'  => 'Berat badan harus berupa angka.',
+            'weight_kg.min'      => 'Berat badan minimal 5 kg.',
+            'weight_kg.max'      => 'Berat badan maksimal 25 kg.',
         ]);
 
         $child = Children::where('parent_id', Auth::id())
@@ -74,11 +79,28 @@ class MeasurementController extends Controller
         $remMonths = $ageMonths % 12;
         $remDays = $ageInDays - ($ageYears * 365) - round($remMonths * 30.4375);
 
+        // Validasi khusus bb/tb
         if ($ageMonths < 24) {
-            $bbtbIndicator = 'length'; // BB/PB
+            // BB/PB → length
+            if ($request->height_cm < 45 || $request->height_cm > 110) {
+                return back()
+                    ->withErrors([
+                        'height_cm' => 'Untuk anak usia di bawah 24 bulan, Panjang badan harus antara 45-110 cm.'
+                    ])
+                    ->withInput();
+            }
         } else {
-            $bbtbIndicator = 'height'; // BB/TB
+            // BB/TB → height
+            if ($request->height_cm < 65 || $request->height_cm > 120) {
+                return back()
+                    ->withErrors([
+                        'height_cm' => 'Untuk anak usia 24 bulan ke atas, tinggi badan harus antara 65-120 cm.'
+                    ])
+                    ->withInput();
+            }
         }
+
+        $bbtbIndicator = $ageMonths < 24 ? 'length' : 'height';
 
         $standardTbU = WhoStandard::getStandard($ageInDays, $request->gender, 'height');
         $standardBbU = WhoStandard::getStandard($ageInDays, $request->gender, 'weight');
