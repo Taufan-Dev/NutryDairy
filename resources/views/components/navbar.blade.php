@@ -33,7 +33,7 @@
 
             <!-- Kanan: Profile + Logout -->
             <div class="hidden md:flex space-x-6 items-center">
-                <a href="#" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+                <a href="{{ route('profile.edit') }}" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                     Profile
                     <span
                         class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
