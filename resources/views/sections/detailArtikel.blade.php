@@ -10,7 +10,8 @@
             <div x-show="openPretest" class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center"
                 x-transition>
 
-                <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6" x-transition.scale>
+                <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6 max-h-[80vh] overflow-y-auto"
+                    x-transition.scale>
 
                     <h2 class="text-xl font-semibold mb-4">Pretest</h2>
 
@@ -19,7 +20,7 @@
 
                         @foreach ($pretestQuestions as $q)
                             <div class="mb-4">
-                                <p class="font-medium text-gray-800">{{ $q->question }}</p>
+                                <p class="font-bold text-gray-800">{{ $loop->iteration }}. {{ $q->question }}</p>
 
                                 @foreach ($q->options as $opt)
                                     <label class="block mt-1">
@@ -45,17 +46,46 @@
     @endif
     <!-- END PRETEST -->
 
-
     <!-- === KONTEN (ARTIKEL / VIDEO) === -->
     <div class="bg-white shadow p-6 rounded-xl mb-10">
-        <h2 class="text-xl font-semibold mb-4">Materi</h2>
 
         @if ($content->media_type === 'video')
-            <video controls class="w-full rounded">
-                <source src="{{ $content->media_url }}" type="video/mp4">
-            </video>
+
+            @php
+                function youtubeId($url)
+                {
+                    preg_match(
+                        '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i',
+                        $url,
+                        $match,
+                    );
+                    return $match[1] ?? null;
+                }
+
+                $videoId = youtubeId($content->media_url);
+            @endphp
+
+
+            @if ($videoId)
+                <a href="{{ $content->media_url }}" target="_blank"
+                    class="relative block aspect-video bg-black rounded overflow-hidden">
+
+                    <img src="https://img.youtube.com/vi/{{ $videoId }}/hqdefault.jpg"
+                        class="w-full h-full object-cover opacity-80">
+
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <svg class="w-20 h-20 text-white opacity-90" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                    </div>
+
+                    <span class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                        Tonton di YouTube
+                    </span>
+                </a>
+            @endif
         @else
-            <div class="prose max-w-none">
+            <div class="article-content ql-editor prose prose-lg max-w-none">
                 {!! $content->content !!}
             </div>
         @endif
@@ -71,39 +101,36 @@
         </div>
     @endif
 
-<div x-data="{ openPosttest: false }" 
-     x-on:open-posttest.window="openPosttest = true">
-    <div x-show="openPosttest"
-         class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center"
-         x-transition>
-        <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6" x-transition.scale>
-            <h2 class="text-xl font-semibold mb-4">Posttest</h2>
+    <div x-data="{ openPosttest: false }" x-on:open-posttest.window="openPosttest = true">
+        <div x-show="openPosttest" class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center"
+            x-transition>
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6" x-transition.scale>
+                <h2 class="text-xl font-semibold mb-4">Posttest</h2>
 
-            <form action="{{ route('article.posttest.submit', $content->id) }}" method="POST">
-                @csrf
+                <form action="{{ route('article.posttest.submit', $content->id) }}" method="POST">
+                    @csrf
 
-                @foreach ($posttestQuestions as $q)
-                    <div class="mb-4">
-                        <p class="font-medium text-gray-800">{{ $q->question }}</p>
+                    @foreach ($posttestQuestions as $q)
+                        <div class="mb-4">
+                            <p class="font-bold text-gray-800">{{ $loop->iteration }}. {{ $q->question }}</p>
 
-                        @foreach ($q->options as $opt)
-                            <label class="block mt-1">
-                                <input type="radio" name="answers[{{ $q->id }}]"
-                                    value="{{ $opt }}" required>
-                                {{ $opt }}
-                            </label>
-                        @endforeach
+                            @foreach ($q->options as $opt)
+                                <label class="block mt-1">
+                                    <input type="radio" name="answers[{{ $q->id }}]"
+                                        value="{{ $opt }}" required>
+                                    {{ $opt }}
+                                </label>
+                            @endforeach
+                        </div>
+                    @endforeach
+
+                    <div class="mt-6 flex justify-end">
+                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            Selesai Posttest
+                        </button>
                     </div>
-                @endforeach
-
-                <div class="mt-6 flex justify-end">
-                    <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                        Selesai Posttest
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
 </section>
