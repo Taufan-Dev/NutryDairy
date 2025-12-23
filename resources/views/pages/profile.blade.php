@@ -41,6 +41,20 @@
                 class="w-full border p-2 rounded mt-1 @error('email') border-red-500 @enderror">
         </div>
 
+        <div>
+            <label class="font-semibold">Nomor Telepon</label>
+            <input type="text" name="phone"
+                value="{{ old('phone', $user->phone) }}"
+                class="w-full border p-2 rounded mt-1 @error('phone') border-red-500 @enderror">
+        </div>
+
+        <div>
+            <label class="font-semibold">Alamat</label>
+            <input type="text" name="address"
+                value="{{ old('address', $user->address) }}"
+                class="w-full border p-2 rounded mt-1 @error('address') border-red-500 @enderror">
+        </div>
+
         <hr class="my-4">
 
         <p class="text-gray-600 text-sm">
