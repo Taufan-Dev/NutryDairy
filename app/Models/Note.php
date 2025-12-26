@@ -11,7 +11,8 @@ class Note extends Model
         'food_menu',
         'food_consumed',
         'items',
-        'photo'
+        'photo',
+        'keluhan',
     ];
 
     protected $casts = [

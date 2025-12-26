@@ -47,6 +47,11 @@
             <input type="file" name="photo" class="w-full border p-2 mt-2 rounded">
         </div>
 
+        <div class="mt-6">
+            <label class="font-semibold">Keluhan Ibu</label>
+            <textarea name="keluhan" class="w-full border p-2 rounded" rows="4" placeholder="Tuliskan keluhan ibu jika ada..."></textarea>
+        </div>
+
         <button class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             Simpan Catatan
         </button>

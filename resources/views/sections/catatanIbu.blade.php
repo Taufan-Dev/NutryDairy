@@ -15,6 +15,10 @@
         @if ($note->photo)
             <img src="{{ asset('storage/'.$note->photo) }}" class="w-32 mt-2 rounded">
         @endif
+        
+        @if ($note->keluhan)
+            <p class="mt-2"><strong>Keluhan Ibu:</strong> {{ $note->keluhan }}</p>
+        @endif
 
         <table class="w-full mt-3 border">
             <thead class="bg-gray-200">

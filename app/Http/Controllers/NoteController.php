@@ -42,7 +42,8 @@ class NoteController extends Controller
             'food_menu' => $request->food_menu,
             'food_consumed' => $request->food_consumed,
             'items' => $request->items,
-            'photo' => $photo
+            'photo' => $photo,
+            'keluhan' => $request->keluhan,
         ]);
 
         return redirect()->route('notes.index')->with('success', 'Catatan berhasil ditambahkan!');
