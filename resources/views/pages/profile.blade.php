@@ -23,9 +23,15 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('profile.update') }}" class="space-y-5">
+    <form method="POST" action="{{ route('profile.update') }}" class="space-y-5" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
+
+        <div>
+            <label class="font-semibold">Foto Profil</label>
+            <input type="file" name="profile_pict"
+                class="w-full border p-2 rounded mt-1 @error('profile_pict') border-red-500 @enderror">
+        </div>
 
         <div>
             <label class="font-semibold">Nama</label>
