@@ -19,7 +19,10 @@
         <!-- Pengetahuan Gizi -->
         <a href="{{ route('article.category', 'pengetahuan') }}"
             class="block bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition">
-            <img src="{{ asset('storage/' . $pengetahuanItem->thumbnail) }}" class="w-full h-48 object-cover">
+            <img src="{{ $pengetahuanItem && $pengetahuanItem->thumbnail
+                ? asset('storage/' . $pengetahuanItem->thumbnail)
+                : asset('assets/img/default-thumb.png') }}"
+                class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-2xl font-semibold mb-2">Pengetahuan Gizi</h3>
                 <p class="text-gray-600">
@@ -31,7 +34,10 @@
         <!-- Keterampilan Gizi -->
         <a href="{{ route('article.category', 'keterampilan') }}"
             class="block bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition">
-            <img src="{{ $keterampilanItem->thumbnail }}" class="w-full h-48 object-cover">
+            <img src="{{ $keterampilanItem && $keterampilanItem->thumbnail
+                ? $keterampilanItem->thumbnail
+                : asset('assets/img/default-thumb.png') }}"
+                class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-2xl font-semibold mb-2">Keterampilan Gizi</h3>
                 <p class="text-gray-600">
