@@ -34,6 +34,7 @@ class ProfileController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'profile_pict' => 'nullable|image|mimes:jpg,png,jpeg|max:8192',
         ]);
         
         $user->name = $request->name;
@@ -43,6 +44,17 @@ class ProfileController extends Controller
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('profile_pict')) {
+            if (!$request->file('profile_pict')->isValid()) {
+                return back()->withErrors([
+                    'profile_pict' => 'File terlalu besar. Maksimum 8MB.',
+                ])->withInput();
+            }
+
+            $profilePictPath = $request->file('profile_pict')->store('profile_pictures', 'public');
+            $user->profile_pict = $profilePictPath;
         }
 
         $user->save();
