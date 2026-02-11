@@ -26,13 +26,13 @@
             <div class="grid grid-cols-3 gap-4 mt-3">
 
                 <input type="text" :name="'items[' + index + '][makanan]'" class="border p-2 rounded"
-                    placeholder="Makanan" x-model="item.makanan">
+                    placeholder="Makanan" x-model="item.makanan" required>
 
                 <input type="text" :name="'items[' + index + '][urt]'" class="border p-2 rounded" placeholder="URT"
-                    x-model="item.urt">
+                    x-model="item.urt" required>
 
                 <input type="text" :name="'items[' + index + '][gizi]'" class="border p-2 rounded" placeholder="Gizi"
-                    x-model="item.gizi">
+                    x-model="item.gizi" required>
 
             </div>
         </template>
