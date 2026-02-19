@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold mb-6">{{ $content->title }}</h1>
 
     <!-- === PRETEST === -->
-    @if ($content->type === 'pengetahuan' && is_null($pretestResult?->score))
+    @if (is_null($pretestResult?->score))
         <div x-data="{ openPretest: true }">
 
             <!-- Modal -->

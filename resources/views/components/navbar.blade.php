@@ -33,7 +33,8 @@
 
             <!-- Kanan: Profile + Logout -->
             <div class="hidden md:flex space-x-6 items-center">
-                <a href="{{ route('profile.edit') }}" class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+                <a href="{{ route('profile.edit') }}"
+                    class="relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                     Profile
                     <span
                         class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
@@ -85,29 +86,49 @@
     <!-- Menu Mobile -->
     <div id="menu" class="md:hidden hidden bg-white border-t border-gray-200">
         <div class="px-4 py-3 space-y-3">
-            <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+            <a href="/" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Home
                 <span
                     class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
-            <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+            <a href="{{ route('article.home') }}"
+                class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Artikel
                 <span
                     class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
-            <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+            <a href="/kalkulatorGizi"
+                class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Kalkulator Gizi
                 <span
                     class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
-            <a href="#" class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
+            <a href="{{ route('profile.edit') }}"
+                class="block relative text-gray-700 hover:text-sky-600 transition duration-300 group">
                 Profile
                 <span
                     class="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
-            <button class="w-full bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition duration-300">
-                Logout
-            </button>
+            @auth
+                <!-- Jika sudah login -->
+                <button onclick="document.getElementById('logoutForm').submit();"
+                    class="w-full bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                    Logout
+                </button>
+
+                <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+                    @csrf
+                </form>
+            @endauth
+
+            @guest
+                <!-- Jika belum login -->
+                <a href="{{ route('login') }}">
+                    <button class="w-full bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                        Login
+                    </button>
+                </a>
+            @endguest
         </div>
     </div>
 </nav>
