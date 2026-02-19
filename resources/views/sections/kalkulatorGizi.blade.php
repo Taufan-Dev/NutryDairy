@@ -1,7 +1,7 @@
 <section class="relative text-center py-24 h-[60vh] text-sekunder font-primary bg-cover bg-center"
     style="background-image: url('https://images.unsplash.com/photo-1502781252888-9143ba7f074e?auto=format&fit=crop&q=80&w=1600');">
     <div class="absolute inset-0 bg-black/70"></div>
-    <div class="relative z-10">
+    <div class="relative">
         <h1 class="text-center text-4xl my-5 text-gray-200">NutryDairy</h1>
         <p class="text-gray-200">
             membantu orang tua memantau status gizi balita dengan mudah,
