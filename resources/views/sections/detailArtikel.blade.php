@@ -1,9 +1,22 @@
 <section class="max-w-4xl mx-auto px-6 py-16">
 
-    <h1 class="text-3xl font-bold mb-6">{{ $content->title }}</h1>
+    @php
+    // Slug yang dirender sebagai infografis (bukan teks Quill biasa).
+    $infografis = [
+        'yuk-pahami-label-gizi'        => 'sections.infografis.label-gizi',
+        'praktik-pemberian-makan-anak' => 'sections.infografis.pemberian-makan-anak',
+        'isi-piringku-untuk-batita'    => 'sections.infografis.isi-piringku-batita',
+    ];
+    $isInfografis = isset($infografis[$content->slug]);
+    @endphp
+
+    @unless ($isInfografis)
+        <h1 class="text-3xl font-bold mb-6">{{ $content->title }}</h1>
+    @endunless
 
     <!-- === PRETEST === -->
-    @if (is_null($pretestResult?->score))
+    {{-- Hanya tampilkan pretest bila ada soal; jika tidak, konten langsung tampil. --}}
+    @if (is_null($pretestResult?->score) && $pretestQuestions->isNotEmpty())
         <div x-data="{ openPretest: true }">
 
             <!-- Modal -->
@@ -46,7 +59,10 @@
     @endif
     <!-- END PRETEST -->
 
-    <!-- === KONTEN (ARTIKEL / VIDEO) === -->
+    <!-- === KONTEN (INFOGRAFIS / ARTIKEL / VIDEO) === -->
+    @if ($isInfografis)
+        @include($infografis[$content->slug])
+    @else
     <div class="bg-white shadow p-6 rounded-xl mb-10">
 
         @if ($content->media_type === 'video')
@@ -90,9 +106,10 @@
             </div>
         @endif
     </div>
+    @endif
 
     <!-- === POSTTEST === -->
-    @if ($content->type === 'pengetahuan' && !is_null($pretestResult?->score) && is_null($posttestResult?->score))
+    @if ($content->type === 'pengetahuan' && $posttestQuestions->isNotEmpty() && !is_null($pretestResult?->score) && is_null($posttestResult?->score))
         <div class="mt-6">
             <button x-data x-on:click="$dispatch('open-posttest')"
                 class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
