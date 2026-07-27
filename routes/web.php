@@ -18,19 +18,21 @@ Route::get('/', function () {
 Route::get('/kalkulatorGizi', function () {
     return view('pages.gizi');
 });
-Route::get('/artikel', [ArticleController::class, 'home'])
-    ->name('article.home');
-Route::get('/artikel/{category}', [ArticleController::class, 'list'])
-    ->name('article.category');
+Route::middleware('auth')->group(function () {
+    Route::get('/artikel', [ArticleController::class, 'home'])
+        ->name('article.home');
+    Route::get('/artikel/{category}', [ArticleController::class, 'list'])
+        ->name('article.category');
 
-Route::get('/artikel/detail/{slug}', [ArticleController::class, 'detail'])
-    ->name('article.detail');
+    Route::get('/artikel/detail/{slug}', [ArticleController::class, 'detail'])
+        ->name('article.detail');
 
-Route::post('/artikel/{id}/pretest', [ArticleController::class, 'submitPretest'])
-    ->name('article.pretest.submit');
+    Route::post('/artikel/{id}/pretest', [ArticleController::class, 'submitPretest'])
+        ->name('article.pretest.submit');
 
-Route::post('/artikel/{id}/posttest', [ArticleController::class, 'submitPosttest'])
-    ->name('article.posttest.submit');
+    Route::post('/artikel/{id}/posttest', [ArticleController::class, 'submitPosttest'])
+        ->name('article.posttest.submit');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
