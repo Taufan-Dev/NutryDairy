@@ -121,7 +121,8 @@
     <div x-data="{ openPosttest: false }" x-on:open-posttest.window="openPosttest = true">
         <div x-show="openPosttest" class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center"
             x-transition>
-            <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6" x-transition.scale>
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-xl p-6 max-h-[80vh] overflow-y-auto"
+                x-transition.scale>
                 <h2 class="text-xl font-semibold mb-4">Posttest</h2>
 
                 <form action="{{ route('article.posttest.submit', $content->id) }}" method="POST">
