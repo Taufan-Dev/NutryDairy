@@ -16,16 +16,20 @@ use Illuminate\Support\Facades\DB;
  * riwayat pengukuran (z-score dihitung konsisten dengan MeasurementController),
  * kebiasaan makan, catatan ibu, dan hasil pretest/posttest.
  *
- * Idempoten: data hasil seeding sebelumnya dihapus dulu berdasarkan marker
- * domain @dummy.id, lalu dibuat ulang. Cascade FK membersihkan children,
- * measurements, feeding_habits, notes, dan quiz_results.
+ * Idempoten: data hasil seeding sebelumnya dihapus dulu berdasarkan penanda
+ * pada kolom remember_token (tidak tampil di UI), lalu dibuat ulang. Cascade
+ * FK membersihkan children, measurements, feeding_habits, notes, dan
+ * quiz_results. Email dummy memakai @gmail.com agar terlihat seperti user asli.
  *
  * Jalankan: php artisan db:seed --class=DummyDataSeeder
  */
 class DummyDataSeeder extends Seeder
 {
-    /** Domain penanda agar data dummy bisa dibersihkan & dibuat ulang. */
-    private const MARKER_DOMAIN = 'dummy.id';
+    /** Domain email dummy (tampil seperti user asli). */
+    private const EMAIL_DOMAIN = 'gmail.com';
+
+    /** Penanda pada remember_token agar data dummy bisa dibersihkan & dibuat ulang. */
+    private const MARKER_TOKEN = 'dummy-seeder';
 
     /** Password yang sama untuk semua akun dummy (di-hash otomatis oleh model). */
     private const DUMMY_PASSWORD = 'password';
@@ -136,8 +140,12 @@ class DummyDataSeeder extends Seeder
 
     public function run(): void
     {
-        $this->command->info('Membersihkan data dummy sebelumnya (marker @' . self::MARKER_DOMAIN . ') ...');
-        $removed = User::where('email', 'like', '%@' . self::MARKER_DOMAIN)->delete();
+        $this->command->info('Membersihkan data dummy sebelumnya ...');
+        // Penanda sekarang di remember_token; @dummy.id dipakai seeder versi
+        // lama, dibersihkan juga sekali agar tidak tersisa.
+        $removed = User::where('remember_token', self::MARKER_TOKEN)
+            ->orWhere('email', 'like', '%@dummy.id')
+            ->delete();
         $this->command->info("  -> {$removed} user dummy lama dihapus (cascade membersihkan data terkait).");
 
         // Struktur quiz: maksimum skor per (konten, tipe) = jumlah soal.
@@ -192,7 +200,7 @@ class DummyDataSeeder extends Seeder
         $city = $this->cities[array_rand($this->cities)];
         $street = $this->streets[array_rand($this->streets)];
 
-        return User::create([
+        $user = User::create([
             'name' => $name,
             'email' => $email,
             'password' => self::DUMMY_PASSWORD,
@@ -200,6 +208,13 @@ class DummyDataSeeder extends Seeder
             'phone' => $this->indonesianPhone(),
             'address' => sprintf('Jl. %s No. %d, RT %02d/RW %02d, %s', $street, random_int(1, 120), random_int(1, 12), random_int(1, 10), $city),
         ]);
+
+        // Penanda dummy — remember_token tidak masuk $fillable, jadi di-set
+        // lewat property assignment (kolom ini tidak pernah tampil di UI).
+        $user->remember_token = self::MARKER_TOKEN;
+        $user->save();
+
+        return $user;
     }
 
     private function createChild(User $parent, string $name): Children
@@ -542,10 +557,10 @@ class DummyDataSeeder extends Seeder
     private function uniqueEmail(string $first, string $last): string
     {
         $base = strtolower($this->slug($first) . '.' . $this->slug($last));
-        $email = "{$base}@" . self::MARKER_DOMAIN;
+        $email = "{$base}@" . self::EMAIL_DOMAIN;
         $i = 2;
         while (isset($this->usedEmails[$email])) {
-            $email = "{$base}{$i}@" . self::MARKER_DOMAIN;
+            $email = "{$base}{$i}@" . self::EMAIL_DOMAIN;
             $i++;
         }
         $this->usedEmails[$email] = true;
